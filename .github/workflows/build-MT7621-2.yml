@@ -11,6 +11,10 @@ on:
 #    - cron: 0 17 * * 4
 #  watch:
    # types: [started]
+   
+# 环境变量
+env:
+  SSH_ACTIONS: false
 
 jobs:
   build:
@@ -32,6 +36,11 @@ jobs:
         cd toolchain-mipsel
         sh dl_toolchain.sh
         mkdir -p /opt/images/
+    
+    - name: SSH connection to Actions
+      uses: P3TERX/debugger-action@main
+      if: env.SSH_ACTIONS == 'true' || contains(github.event.action, 'ssh')
+    
     - name: Build Firmware
       env:
         TNAME: "NEWIFI-D1"
